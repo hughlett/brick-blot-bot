@@ -31,7 +31,7 @@ def get_day(day, driver):
     df = pd.concat(table)
 
     if close_driver:
-        driver.close()
+        driver.quit()
 
     if len(df) > 1:
         new_header = df.iloc[1]
@@ -59,6 +59,6 @@ def get_range(start_date, end_date):
         df = get_day(start_date, driver)
         frames.append(df)
         start_date += delta
-    driver.close()
+    driver.quit()
     df = pd.concat(frames, ignore_index=True)
     return df
