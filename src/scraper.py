@@ -1,15 +1,21 @@
+import platform
 import pandas as pd
 from datetime import date, timedelta
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 
 REPORTS_URL = 'https://safety2.oit.ncsu.edu//newblotter.asp'
+CHROME_URL = 'http://127.0.0.1:4444/wd/hub'
 
 def make_driver():
     options = Options()
     options.headless = True
-    driver = webdriver.Chrome('src/chromedriver', options=options)
-    return driver
+    os = platform.system()
+    if os == 'Windows':
+        return webdriver.Chrome('src/chromedriver', options=options)
+    elif os == 'Linux':
+        return webdriver.Remote(CHROME_URL, DesiredCapabilities.CHROME, options=options)
 
 def get_day(day, driver):
     close_driver = False
