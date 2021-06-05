@@ -46,7 +46,7 @@ def get_day(day, driver):
 
         for index, row in df.iterrows():
             if row['Date / Time Occurred *'] == 'nan':
-                row['Date / Time Occurred *'] = day.strftime('%x') + ' ' + row['Time Reported']
+                row['Date / Time Occurred *'] = day.strftime('%x') + '  ' + row['Time Reported']
         return df
 
 def get_yesterday():
