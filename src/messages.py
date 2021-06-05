@@ -15,14 +15,21 @@ def break_up_message(message: str):
     return messages
 
 def create_message_from_report(row):
-    date_and_time = row['Date / Time Occurred *'].replace("  ", " ")
-    if date_and_time == 'nan':
+    if row['Date / Time Occurred *'] == 'nan':
         date = (datetime.today() - timedelta(1)).strftime('%-m/%-d/%y')
-        date_and_time = date + ' ' + row['Time Reported'].replace(' ', '')
-    message = row['Location'] + '\n' + date_and_time + '\n' + row['Incident'] + '\n' + '\n' + row['Narrative']
-    
-    if 'Unknown' in date_and_time:
-        message = 'Unknown location and time' + '\n' + row['Incident'] + '\n' + '\n' + row['Narrative']
+        time = row['Time Reported'].replace(' ', '')
+    else:
+        date_and_time = row['Date / Time Occurred *'].split("  ")
+        date = date_and_time[0]
+        time = date_and_time[1]
+
+        if 'Unknown' in date:
+            date = 'Unknown date'
+
+        if 'Unknown' in time:
+            time = 'Unknown time'
+
+    message = row['Location'] + '\n' + date + ' ' + time + '\n' + row['Incident'] + '\n' + '\n' + row['Narrative']
     message = break_up_message(message)
     return message
 
