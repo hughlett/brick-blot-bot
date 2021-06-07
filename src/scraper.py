@@ -61,8 +61,10 @@ def get_range(start_date, end_date):
     delta = timedelta(days=1)
     while start_date <= end_date:
         df = get_day(start_date, driver)
-        frames.append(df)
+        if df is not None:
+            frames.append(df)
         start_date += delta
     driver.quit()
-    df = pd.concat(frames, ignore_index=True)
-    return df
+    if frames[0] is not None:
+        df = pd.concat(frames, ignore_index=True)
+        return df
