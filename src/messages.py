@@ -18,6 +18,9 @@ def create_message_from_report(row):
     if row['Date / Time Occurred *'] == 'nan':
         date = (datetime.today() - timedelta(1)).strftime('%-m/%-d/%y')
         time = row['Time Reported'].replace(' ', '')
+    elif ' - ' in row['Date / Time Occurred *']:
+        date = row['Date / Time Occurred *']
+        time = 'Unknown time'
     else:
         date_and_time = row['Date / Time Occurred *'].split("  ")
         date = date_and_time[0]
