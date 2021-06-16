@@ -24,7 +24,10 @@ def create_message_from_report(row):
     else:
         date_and_time = row['Date / Time Occurred *'].split("  ")
         date = date_and_time[0]
-        time = date_and_time[1]
+        if len(date_and_time) == 1:
+            time = 'Unknown time'
+        else:
+            time = date_and_time[1]
 
         if 'Unknown' in date:
             date = 'Unknown date'
