@@ -1,5 +1,6 @@
 from datetime import datetime, timedelta
 
+
 def break_up_message_helper(message: str, list: list):
     if len(message) <= 280:
         list.append(message)
@@ -9,10 +10,12 @@ def break_up_message_helper(message: str, list: list):
     end_of_message = '\u2026' + message[277:]
     return break_up_message_helper(end_of_message, list)
 
+
 def break_up_message(message: str):
     messages = []
     break_up_message_helper(message, messages)
     return messages
+
 
 def create_message_from_report(row):
     if row['Date / Time Occurred *'] == 'nan':
@@ -35,9 +38,11 @@ def create_message_from_report(row):
         if 'Unknown' in time:
             time = 'Unknown time'
 
-    message = row['Location'] + '\n' + date + ' ' + time + '\n' + row['Incident'] + '\n' + '\n' + row['Narrative']
+    message = row['Location'] + '\n' + date + ' ' + time + \
+        '\n' + row['Incident'] + '\n' + '\n' + row['Narrative']
     message = break_up_message(message)
     return message
+
 
 def get_reports_as_messages(df):
     reports = []
