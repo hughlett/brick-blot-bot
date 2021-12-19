@@ -31,6 +31,15 @@ def make_driver():
 
 
 def get_day(day, driver):
+    """Returns a dataframe of reports for a given date.
+
+    Args:
+        day: The Date to get reports for.
+        driver: The webdriver to use.
+
+    Returns:
+        A dataframe of police reports.
+    """
     close_driver = False
     if driver == None:
         driver = make_driver()
@@ -64,12 +73,17 @@ def get_day(day, driver):
         return df
 
 
-def get_yesterday():
-    return get_day(date.today() - timedelta(1), None)
-
-
 def get_range(start_date, end_date):
-    frames = []
+    """Returns a dataframe of reports for a date range.
+
+    Args:
+        start_date: The date to begin with.
+        end_date: The date to end with (inclusive).
+
+    Returns:
+        A dataframe of police reports for a range of dates.
+    """
+    frames = list()
     driver = make_driver()
     delta = timedelta(days=1)
     while start_date <= end_date:
