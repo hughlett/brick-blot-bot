@@ -1,0 +1,10 @@
+version: "3.9"
+
+services:
+  chrome:
+    image: selenium/standalone-chrome:latest
+    shm_size: 2g
+  app:
+    build: .
+    depends_on:
+      - "chrome"

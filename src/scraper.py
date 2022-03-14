@@ -1,13 +1,11 @@
-import platform
-import sys
 import pandas as pd
-from datetime import date, timedelta
+from datetime import timedelta
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 
 REPORTS_URL = 'https://safety2.oit.ncsu.edu//newblotter.asp'
-CHROME_URL = 'http://127.0.0.1:4444/wd/hub'
+CHROME_URL = 'http://chrome:4444/wd/hub'
 
 
 def make_driver():
@@ -19,15 +17,7 @@ def make_driver():
     """
     options = Options()
     options.headless = True
-    os = platform.system()
-
-    if os == 'Linux':
-        return webdriver.Remote(CHROME_URL, DesiredCapabilities.CHROME, options=options)
-    elif os == 'Windows':
-        return webdriver.Chrome('./chromedriver', options=options)
-    else:
-        print(f'scraper.py does not support {os}.')
-        sys.exit()
+    return webdriver.Remote(CHROME_URL, DesiredCapabilities.CHROME, options=options)
 
 
 def get_day(day, driver):

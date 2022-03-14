@@ -2,6 +2,15 @@ from datetime import datetime, timedelta
 
 
 def break_up_message_helper(message: str, list: list):
+    """[summary]
+
+    Args:
+        message (str): [description]
+        list (list): [description]
+
+    Returns:
+        [type]: [description]
+    """
     if len(message) <= 280:
         list.append(message)
         return
@@ -12,12 +21,28 @@ def break_up_message_helper(message: str, list: list):
 
 
 def break_up_message(message: str):
+    """[summary]
+
+    Args:
+        message (str): [description]
+
+    Returns:
+        [type]: [description]
+    """
     messages = []
     break_up_message_helper(message, messages)
     return messages
 
 
 def create_message_from_report(row):
+    """[summary]
+
+    Args:
+        row ([type]): [description]
+
+    Returns:
+        [type]: [description]
+    """
     if row['Date / Time Occurred *'] == 'nan':
         date = (datetime.today() - timedelta(1)).strftime('%-m/%-d/%y')
         time = row['Time Reported'].replace(' ', '')
@@ -45,6 +70,14 @@ def create_message_from_report(row):
 
 
 def get_reports_as_messages(df):
+    """[summary]
+
+    Args:
+        df ([type]): [description]
+
+    Returns:
+        [type]: [description]
+    """
     reports = []
     for index, row in df.iterrows():
         report = create_message_from_report(row)

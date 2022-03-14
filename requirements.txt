@@ -2,3 +2,5 @@ tweepy==3.10.0
 selenium==3.141.0
 pandas==1.2.4
 python-dotenv==0.19.2
+lxml
+html5lib
