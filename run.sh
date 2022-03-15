@@ -1,4 +1,5 @@
 #!/bin/bash
+
 PROJECT_PATH=`dirname $0`
 COMPOSE_PATH=${PROJECT_PATH}/docker-compose.yml
 
