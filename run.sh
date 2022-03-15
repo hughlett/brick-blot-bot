@@ -1,5 +1,6 @@
-COMPOSE_PATH=/volume1/GithubProjects/brick-blot-bot/docker-compose.yml
-PROJECT_PATH=/volume1/GithubProjects/brick-blot-bot
+#!/bin/bash
+PROJECT_PATH=`dirname $0`
+COMPOSE_PATH=${PROJECT_PATH}/docker-compose.yml
 
 cd ${PROJECT_PATH} && git pull
-docker-compose -f ${COMPOSE_PATH} up --build --abort-on-container-exit && docker-compose -f ${COMPOSE_PATH} down
+docker-compose -f ${COMPOSE_PATH}/docker-compose.yml up --build --abort-on-container-exit && docker-compose -f ${COMPOSE_PATH} down
