@@ -6,7 +6,7 @@ services:
     ports:
       - 4444:4444
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://selenium:4444"]
+      test: ["CMD", "curl", "-f", "http://selenium:4444/wd/hub/status"]
       interval: 30s
       timeout: 10s
       retries: 20
