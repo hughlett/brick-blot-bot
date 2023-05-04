@@ -1,9 +1,11 @@
-version: "3.9"
 services:
-  chrome:
+  selenium:
+    container_name: selenium
     image: selenium/standalone-chrome:latest
     shm_size: 2g
-  app:
+  brick-blot-bot:
+    container_name: brick-blot-bot
     build: .
+    image: registry.digitalocean.com/mushroom-kingdom/brick-blot-bot:latest
     depends_on:
-      - "chrome"
+      - "selenium"

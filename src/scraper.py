@@ -5,7 +5,7 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 
 REPORTS_URL = 'https://safety2.oit.ncsu.edu//newblotter.asp'
-CHROME_URL = 'http://chrome:4444/wd/hub'
+CHROME_URL = 'http://selenium:4444/wd/hub'
 
 
 def make_driver():
