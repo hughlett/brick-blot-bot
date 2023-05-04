@@ -33,4 +33,9 @@ jobs:
 
       - name: Up
         run: docker-compose up --abort-on-container-exit --exit-code-from brick-blot-bot
+        env:
+          ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+          ACCESS_TOKEN_SECRET: ${{ secrets.ACCESS_TOKEN_SECRET }}
+          API: ${{ secrets.API }}
+          API_SECRET: ${{ secrets.API_SECRET }}
 
