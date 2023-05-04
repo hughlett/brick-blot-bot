@@ -1,0 +1,39 @@
+name: Post
+
+on:
+  push:
+    branches: [main]
+    paths-ignore:
+  workflow_dispatch:
+
+jobs:
+  post:
+    name: Post
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Install doctl
+        uses: digitalocean/action-doctl@v2
+        with:
+          token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
+
+      - name: Authenticate Docker with registry
+        run: doctl registry login
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Build and push
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          push: true
+          tags: registry.digitalocean.com/mushroom-kingdom/brick-blot-bot:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Up
+        run: docker-compose up --abort-on-container-exit --exit-code-from brick-blot-bot
+
