@@ -3,6 +3,8 @@ services:
     container_name: selenium
     image: selenium/standalone-chrome:latest
     shm_size: 2g
+    ports:
+      - 4444:4444
   brick-blot-bot:
     container_name: brick-blot-bot
     build: .
