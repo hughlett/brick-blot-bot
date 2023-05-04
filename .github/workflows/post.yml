@@ -1,9 +1,6 @@
 name: Post
 
 on:
-  push:
-    branches: [main]
-    paths-ignore:
   workflow_dispatch:
 
 jobs:
