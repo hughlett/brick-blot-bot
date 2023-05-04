@@ -4,8 +4,8 @@ from datetime import date, timedelta
 from src.scraper import get_range
 from src.messages import get_reports_as_messages
 
-auth = tweepy.OAuthHandler(environ['API'], environ['APISecret'])
-auth.set_access_token(environ['AccessToken'], environ['AccessTokenSecret'])
+auth = tweepy.OAuthHandler(environ['API'], environ['API_SECRET'])
+auth.set_access_token(environ['ACCESS_TOKEN'], environ['ACCESS_TOKEN_SECRET'])
 api = tweepy.API(auth)
 
 def main():
