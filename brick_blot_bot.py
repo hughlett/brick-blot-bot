@@ -1,18 +1,12 @@
 import tweepy
 from os import environ
-from os.path import dirname, abspath, join
 from datetime import date, timedelta
-from dotenv import load_dotenv
 from src.scraper import get_range
 from src.messages import get_reports_as_messages
 
-PATH_TO_KEYS = abspath(dirname(abspath(__file__)))
-
-load_dotenv(join(PATH_TO_KEYS, '.env'))
 auth = tweepy.OAuthHandler(environ['API'], environ['APISecret'])
 auth.set_access_token(environ['AccessToken'], environ['AccessTokenSecret'])
 api = tweepy.API(auth)
-
 
 def main():
     df = get_range(date.today() - timedelta(7), date.today())
