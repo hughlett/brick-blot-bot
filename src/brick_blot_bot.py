@@ -16,7 +16,8 @@ def main():
     # api = tweepy.API(auth)
 
     html = requests.get('https://safety2.oit.ncsu.edu/newblotter.asp?NOTDTE=10%2F16%2F23&submit=Submit').text
-    print(pd.read_html(html))
+    df = pd.read_html(html)[1]
+    print(df.iloc[1][0])
 
     # table = pd.read_html('https://safety2.oit.ncsu.edu/newblotter.asp?NOTDTE=10%2F09%2F23&submit=Submit', encoding='UTF-8')
     # df = pd.concat(table)
