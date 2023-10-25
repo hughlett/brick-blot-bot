@@ -1,3 +1,4 @@
+from time import sleep
 import tweepy
 from os import environ
 from datetime import date, timedelta
@@ -9,6 +10,7 @@ auth.set_access_token(environ['ACCESS_TOKEN'], environ['ACCESS_TOKEN_SECRET'])
 api = tweepy.API(auth)
 
 def main():
+    print('test')
     df = get_range(date.today() - timedelta(7), date.today())
     if df is None:
         return

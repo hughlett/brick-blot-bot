@@ -1,0 +1,7 @@
+tweepy
+selenium
+numpy
+pandas
+python-dotenv
+lxml
+html5lib

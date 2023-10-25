@@ -1,23 +1,18 @@
 import pandas as pd
 from datetime import timedelta
 from selenium import webdriver
-from selenium.webdriver.chrome.options import Options
-from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 
 REPORTS_URL = 'https://safety2.oit.ncsu.edu//newblotter.asp'
-CHROME_URL = 'http://selenium:4444/wd/hub'
+CHROME_URL = 'http://localhost:4444/'
 
 
 def make_driver():
     """Returns a selenium webdriver.
 
     Returns:
-        A webdriver for either a Windows Chrome install
-        or a remote instance of Chrome on localhost:4444.
+        A webdriver for a remote instance of Chrome on localhost:4444.
     """
-    options = Options()
-    options.headless = True
-    return webdriver.Remote(CHROME_URL, DesiredCapabilities.CHROME, options=options)
+    return webdriver.Remote(command_executor=CHROME_URL, options=webdriver.ChromeOptions()).set_page_load_timeout(30)
 
 
 def get_day(day, driver):

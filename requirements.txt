@@ -1,7 +1,0 @@
-tweepy==3.10.0
-selenium==3.141.0
-numpy
-pandas
-python-dotenv==0.19.2
-lxml
-html5lib
