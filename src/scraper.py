@@ -1,52 +1,32 @@
+from io import StringIO
 import pandas as pd
 from datetime import timedelta
+import requests
 
-REPORTS_URL = 'https://safety2.oit.ncsu.edu//newblotter.asp'
-
-
-def get_day(day):
-    """Returns a dataframe of reports for a given date.
-
-    Args:
-        day: The Date to get reports for.
-
-    Returns:
-        A dataframe of police reports.
-    """
-    table = pd.read_html('https://safety2.oit.ncsu.edu/newblotter.asp?NOTDTE=10%2F09%2F23&submit=Submit')
-    df = pd.concat(table)
+def scrape_day(date):
+    url = f"https://safety2.oit.ncsu.edu/newblotter.asp?NOTDTE={date.month}%2F{date.day}%2F{date.year % 100}&submit=Submit"
+    html = requests.get(url).text
+    df = pd.read_html(StringIO(html))
 
     if len(df) > 1:
-        new_header = df.iloc[1]
-        df = df[1:]
-        df.columns = new_header
-        df = df.drop(0)
-        df = df.astype(str)
+        df = df[1]
+        df = df.rename(columns=df.iloc[0]) # Rename columns
+        df = df.drop(df.index[0]) # Drop first row that containers column headers
+        df = df.iloc[:, :-1] # Drop Disposition column
+        df['Date / Time  Occurred *'] = df['Date / Time  Occurred *'].fillna(date.strftime('%x')) # Add date
 
-        for index, row in df.iterrows():
-            if row['Date / Time Occurred *'] == 'nan':
-                row['Date / Time Occurred *'] = day.strftime(
-                    '%x') + '  ' + row['Time Reported']
         return df
+    
+    return None
 
-
-def get_range(start_date, end_date):
-    """Returns a dataframe of reports for a date range.
-
-    Args:
-        start_date: The date to begin with.
-        end_date: The date to end with (inclusive).
-
-    Returns:
-        A dataframe of police reports for a range of dates.
-    """
-    frames = list()
+def scrape_days(start_date, end_date):
+    dataframes = list()
     delta = timedelta(days=1)
+
     while start_date <= end_date:
-        df = get_day(start_date)
-        if df is not None:
-            frames.append(df)
+        reports = scrape_day(start_date)
+        if reports is not None: dataframes.append(reports)
         start_date += delta
-    if frames[0] is not None:
-        df = pd.concat(frames, ignore_index=True)
-        return df
+
+    if dataframes[0] is not None:
+        return pd.concat(dataframes, ignore_index=True)

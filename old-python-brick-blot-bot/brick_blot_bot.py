@@ -2,7 +2,7 @@ from time import sleep
 import tweepy
 from os import environ
 from datetime import date, timedelta
-from src.scraper import get_range
+from src.scraper import scarpe_days
 from src.messages import get_reports_as_messages
 
 auth = tweepy.OAuthHandler(environ['API'], environ['API_SECRET'])
@@ -11,7 +11,7 @@ api = tweepy.API(auth)
 
 def main():
     print('test')
-    df = get_range(date.today() - timedelta(7), date.today())
+    df = scarpe_days(date.today() - timedelta(7), date.today())
     if df is None:
         return
 

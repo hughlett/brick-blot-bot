@@ -2,47 +2,18 @@ from datetime import datetime, timedelta
 
 
 def break_up_message_helper(message: str, list: list):
-    """[summary]
-
-    Args:
-        message (str): [description]
-        list (list): [description]
-
-    Returns:
-        [type]: [description]
-    """
     if len(message) <= 280:
-        list.append(message)
-        return
-    start_of_message = message[:277] + '\u2026'
-    list.append(start_of_message)
-    end_of_message = '\u2026' + message[277:]
-    return break_up_message_helper(end_of_message, list)
+        return list.append(message)    
+    return break_up_message_helper('\u2026' + message[277:], list.append(message[:277] + '\u2026'))
 
 
 def break_up_message(message: str):
-    """[summary]
-
-    Args:
-        message (str): [description]
-
-    Returns:
-        [type]: [description]
-    """
     messages = []
     break_up_message_helper(message, messages)
     return messages
 
 
 def create_message_from_report(row):
-    """[summary]
-
-    Args:
-        row ([type]): [description]
-
-    Returns:
-        [type]: [description]
-    """
     if row['Date / Time Occurred *'] == 'nan':
         date = (datetime.today() - timedelta(1)).strftime('%-m/%-d/%y')
         time = row['Time Reported'].replace(' ', '')
@@ -67,19 +38,3 @@ def create_message_from_report(row):
         '\n' + row['Incident'] + '\n' + '\n' + row['Narrative']
     message = break_up_message(message)
     return message
-
-
-def get_reports_as_messages(df):
-    """[summary]
-
-    Args:
-        df ([type]): [description]
-
-    Returns:
-        [type]: [description]
-    """
-    reports = []
-    for index, row in df.iterrows():
-        report = create_message_from_report(row)
-        reports.append(report)
-    return reports
