@@ -22,4 +22,7 @@ def print_all_reports():
             print(rows)
 
 def report_exists(report_number):
-    return False
+    with closing(sqlite3.connect("reports.db")) as connection:
+        with closing(connection.cursor()) as cursor:
+            match = cursor.execute("SELECT report_number from report WHERE report_number = ?", (report_number,)).fetchone()
+            return True if match else False

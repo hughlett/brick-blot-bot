@@ -4,6 +4,7 @@ from datetime import timedelta
 import requests
 
 def scrape_day(date):
+    print(date)
     url = f"https://safety2.oit.ncsu.edu/newblotter.asp?NOTDTE={date.month}%2F{date.day}%2F{date.year % 100}&submit=Submit"
     html = requests.get(url).text
     df = pd.read_html(StringIO(html))
