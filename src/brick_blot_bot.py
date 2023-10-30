@@ -4,12 +4,12 @@ from datetime import date, timedelta
 from dotenv import load_dotenv
 from db import create_table, insert_report, report_exists
 from scraper import scrape_days
-from messages import create_message_from_report
+from tweets import create_tweets_from_report, tweet_report
 
 
 def main():
     load_dotenv()
-    create_table()
+    # create_table()
 
     client = tweepy.Client(
         consumer_key=environ.get("API"),
@@ -22,21 +22,9 @@ def main():
     if df is None:
         return
 
-    MAX_API_CALLS = 50
-    api_calls = 0
-
     for index, row in df.iterrows():
         if not report_exists(row["Report Number"]):
-            message = create_message_from_report(row)
-
-            if api_calls + len(message) <= MAX_API_CALLS:
-                api_calls += len(message)
-                insert_report(row)
-                response = client.create_tweet(text=message[0])
-                for reply in message[1:]:
-                    response = client.create_tweet(
-                        text=reply, in_reply_to_tweet_id=response.data["id"]
-                    )
+            tweet_report(client, row)
 
 
 if __name__ == "__main__":
