@@ -2,9 +2,9 @@ import tweepy
 from os import environ
 from datetime import date, timedelta
 from dotenv import load_dotenv
-from db import create_table, insert_report, report_exists
+from db import create_table, report_exists
 from scraper import scrape_days
-from tweets import create_tweets_from_report, tweet_report
+from tweets import tweet_report
 
 
 def main():
