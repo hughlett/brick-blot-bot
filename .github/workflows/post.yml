@@ -22,6 +22,11 @@ jobs:
         run: pip install -r requirements.txt
 
       - name: Run brick-blot-bot
+        env:
+          CONSUMER_KEY: ${{secrets.CONSUMER_KEY}}
+          CONSUMER_KEY_SECRET: ${{secrets.CONSUMER_KEY_SECRET}}
+          ACCESS_TOKEN: ${{secrets.ACCESS_TOKEN}}
+          ACCESS_TOKEN_SECRET: ${{secrets.ACCESS_TOKEN_SECRET}}
         run: python brick-blot-bot
 
       - name: Commit changes
