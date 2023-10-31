@@ -32,5 +32,5 @@ jobs:
       - name: Commit database changes
         uses: EndBug/add-and-commit@v9
         with:
-          message: "🗃️ Update database"
+          message: "🗃️ Save reports"
           add: "reports.db"
