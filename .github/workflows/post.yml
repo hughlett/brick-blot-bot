@@ -1,8 +1,8 @@
 name: "Post reports to X"
+
 on:
-  # schedule:
-  #   - cron: "0 17 * * *"
-  workflow_dispatch:
+  schedule:
+    - cron: "0 12 * * *"
 
 jobs:
   post:
@@ -29,7 +29,7 @@ jobs:
           ACCESS_TOKEN_SECRET: ${{secrets.ACCESS_TOKEN_SECRET}}
         run: python brick-blot-bot
 
-      - name: Commit changes
+      - name: Commit database changes
         uses: EndBug/add-and-commit@v9
         with:
           message: "🗃️ Update database"
