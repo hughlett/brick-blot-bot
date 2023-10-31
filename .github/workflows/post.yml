@@ -1,0 +1,31 @@
+name: "Post reports to X"
+on:
+  # schedule:
+  #   - cron: "0 17 * * *"
+  workflow_dispatch:
+
+jobs:
+  post:
+    name: "Post new reports to X"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout trunk
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.10"
+          cache: "pip"
+
+      - name: Install Python dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run brick-blot-bot
+        run: python brick-blot-bot
+
+      - name: Commit changes
+        uses: EndBug/add-and-commit@v9
+        with:
+          message: "🗃️ Update database"
+          add: "reports.db"
