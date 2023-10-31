@@ -2,9 +2,8 @@ import tweepy
 from os import environ
 from datetime import date, timedelta
 from dotenv import load_dotenv
-from db import create_table, report_exists
-from scraper import scrape_days
-from tweets import tweet_report
+
+from tweets import tweet_reports
 
 
 def main():
@@ -12,19 +11,13 @@ def main():
     # create_table()
 
     client = tweepy.Client(
-        consumer_key=environ.get("API"),
-        consumer_secret=environ.get("API_SECRET"),
+        consumer_key=environ.get("CONSUMER_KEY"),
+        consumer_secret=environ.get("CONSUMER_KEY_SECRET"),
         access_token=environ.get("ACCESS_TOKEN"),
         access_token_secret=environ.get("ACCESS_TOKEN_SECRET"),
     )
 
-    df = scrape_days(date.today() - timedelta(30), date.today())
-    if df is None:
-        return
-
-    for index, row in df.iterrows():
-        if not report_exists(row["Report Number"]):
-            tweet_report(client, row)
+    tweet_reports(date.today() - timedelta(30), date.today(), client)
 
 
 if __name__ == "__main__":

@@ -1,12 +1,17 @@
-from db import insert_report
+from datetime import date, timedelta
+from db import insert_report, report_exists
+from scraper import scrape_days
 
 
 def create_tweets_from_text_helper(text: str, tweets: list):
-    if len(text) <= 280:
+    MAX_TWEET_LENGTH = 280
+    if len(text) <= MAX_TWEET_LENGTH:
         return tweets.append(text)
 
-    tweets.append(text[:277] + "\u2026")
-    return create_tweets_from_text_helper("\u2026" + text[277:], tweets)
+    tweets.append(text[: MAX_TWEET_LENGTH - 3] + "\u2026")
+    return create_tweets_from_text_helper(
+        "\u2026" + text[MAX_TWEET_LENGTH - 3 :], tweets
+    )
 
 
 def create_tweets_from_text(text: str):
@@ -36,12 +41,23 @@ def create_tweets_from_report(report):
     return create_tweets_from_text(text)
 
 
-def tweet_report(client, report):
-    tweets = create_tweets_from_report(report)
-    response = client.create_tweet(text=tweets[0])
+def tweet_reports(start_date, end_date, client):
+    df = scrape_days(start_date, end_date)
 
-    for reply in tweets[1:]:
-        response = client.create_tweet(
-            text=reply, in_reply_to_tweet_id=response.data["id"]
-        )
-    insert_report(report)
+    if df is not None:
+        MAX_API_CALLS = 50
+        api_calls = 0
+
+        for index, report in df.iterrows():
+            if not report_exists(report["Report Number"]):
+                tweets = create_tweets_from_report(report)
+
+                if api_calls + len(tweets) <= MAX_API_CALLS:
+                    api_calls += len(tweets)
+                    response = client.create_tweet(text=tweets[0])
+
+                    for reply in tweets[1:]:
+                        response = client.create_tweet(
+                            text=reply, in_reply_to_tweet_id=response.data["id"]
+                        )
+                    insert_report(report)
