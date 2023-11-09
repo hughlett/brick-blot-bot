@@ -44,20 +44,26 @@ def create_tweets_from_report(report):
 def tweet_reports(start_date, end_date, client):
     df = scrape_days(start_date, end_date)
 
-    if df is not None:
-        MAX_API_CALLS = 50
-        api_calls = 0
+    if df is None:
+        return
 
-        for index, report in df.iterrows():
-            if not report_exists(report["Report Number"]):
-                tweets = create_tweets_from_report(report)
+    MAX_API_CALLS = 50
+    api_calls = 0
 
-                if api_calls + len(tweets) <= MAX_API_CALLS:
-                    api_calls += len(tweets)
-                    response = client.create_tweet(text=tweets[0])
+    for index, report in df.iterrows():
+        if report_exists(report["Report Number"]):
+            continue
 
-                    for reply in tweets[1:]:
-                        response = client.create_tweet(
-                            text=reply, in_reply_to_tweet_id=response.data["id"]
-                        )
-                    insert_report(report)
+        tweets = create_tweets_from_report(report)
+
+        if api_calls + len(tweets) >= MAX_API_CALLS:
+            return
+
+        api_calls += len(tweets)
+        response = client.create_tweet(text=tweets[0])
+
+        for reply in tweets[1:]:
+            response = client.create_tweet(
+                text=reply, in_reply_to_tweet_id=response.data["id"]
+            )
+        insert_report(report)
