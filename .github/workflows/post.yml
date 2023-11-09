@@ -29,7 +29,7 @@ jobs:
           ACCESS_TOKEN_SECRET: ${{secrets.ACCESS_TOKEN_SECRET}}
         run: python brick-blot-bot
 
-      - name: Commit database changes
+      - name: Commit any database changes
         uses: EndBug/add-and-commit@v9
         with:
           message: "🗃️ Save reports"
