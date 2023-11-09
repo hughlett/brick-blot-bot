@@ -5,22 +5,22 @@ import requests
 
 
 def scrape_day(date):
-    url = f"https://safety2.oit.ncsu.edu/newblotter.asp?NOTDTE={date.month}%2F{date.day}%2F{date.year % 100}&submit=Submit"
+    url = f"https://safety2.oit.ncsu.edu/newblotter.asp?NOTDTE={str(date.month).zfill(2)}%2F{str(date.day).zfill(2)}%2F{date.year % 100}&submit=Submit"
     html = requests.get(url).text
     df = pd.read_html(StringIO(html))
 
-    if len(df) > 1:
-        df = df[1]
-        df = df.rename(columns=df.iloc[0])  # Rename columns
-        df = df.drop(df.index[0])  # Drop first row that containers column headers
-        df = df.iloc[:, :-1]  # Drop Disposition column
-        df["Date / Time  Occurred *"] = df["Date / Time  Occurred *"].fillna(
-            date.strftime("%x")
-        )  # Add date
+    if len(df) <= 1:
+        return None
 
-        return df
+    df = df[1]
+    df = df.rename(columns=df.iloc[0])  # Rename columns
+    df = df.drop(df.index[0])  # Drop first row that containers column headers
+    df = df.iloc[:, :-1]  # Drop Disposition column
+    df["Date / Time  Occurred *"] = df["Date / Time  Occurred *"].fillna(
+        date.strftime("%x")
+    )  # Add date
 
-    return None
+    return df
 
 
 def scrape_days(start_date, end_date):
