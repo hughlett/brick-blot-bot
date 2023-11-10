@@ -30,6 +30,7 @@ jobs:
         run: python brick-blot-bot
 
       - name: Commit any database changes
+        if: success() || failure()
         uses: EndBug/add-and-commit@v9
         with:
           message: "🗃️ Save reports"
