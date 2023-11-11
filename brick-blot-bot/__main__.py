@@ -7,7 +7,6 @@ from tweets import tweet_reports
 
 
 load_dotenv()
-# create_table()
 
 client = tweepy.Client(
     consumer_key=environ.get("CONSUMER_KEY"),
