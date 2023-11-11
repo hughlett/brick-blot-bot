@@ -1,6 +1,6 @@
-from datetime import date, timedelta
-
+from datetime import date
 from pandas import DataFrame
+from tweepy import Client
 from db import insert_report, report_exists
 from scraper import scrape_days
 
@@ -41,7 +41,7 @@ def create_tweets_from_report(report: DataFrame) -> list:
     return create_tweets_from_text(text)
 
 
-def tweet_reports(start_date, end_date, client) -> None:
+def tweet_reports(start_date: date, end_date: date, client: Client) -> None:
     reports = scrape_days(start_date, end_date)
 
     if reports is None:

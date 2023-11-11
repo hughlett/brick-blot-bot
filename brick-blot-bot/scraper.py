@@ -1,10 +1,10 @@
 from io import StringIO
 from pandas import read_html, concat, DataFrame
-from datetime import timedelta
+from datetime import date, timedelta
 import requests
 
 
-def scrape_day(date) -> DataFrame:
+def scrape_day(date: date) -> DataFrame:
     url = f"https://safety2.oit.ncsu.edu/newblotter.asp?NOTDTE={str(date.month).zfill(2)}%2F{str(date.day).zfill(2)}%2F{date.year % 100}&submit=Submit"
     html = requests.get(url).text
     df = read_html(StringIO(html))
@@ -23,7 +23,7 @@ def scrape_day(date) -> DataFrame:
     return df
 
 
-def scrape_days(start_date, end_date) -> DataFrame | None:
+def scrape_days(start_date: date, end_date: date) -> DataFrame | None:
     dataframes = list()
     delta = timedelta(days=1)
 

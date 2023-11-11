@@ -1,6 +1,8 @@
 import sqlite3
 from contextlib import closing
 
+from pandas import DataFrame
+
 
 def create_table() -> None:
     with closing(sqlite3.connect("reports.db")) as connection:
@@ -11,7 +13,12 @@ def create_table() -> None:
 
 
 def insert_row(
-    report_number, time_reported, date_time_occurred, incident, location, narrative
+    report_number: int,
+    time_reported: str,
+    date_time_occurred: str,
+    incident: str,
+    location: str,
+    narrative: str,
 ) -> None:
     with closing(sqlite3.connect("reports.db")) as connection:
         with closing(connection.cursor()) as cursor:
@@ -29,7 +36,7 @@ def insert_row(
         connection.commit()
 
 
-def insert_report(report) -> None:
+def insert_report(report: DataFrame) -> None:
     insert_row(
         report["Report Number"],
         report["Time Reported"],
@@ -40,7 +47,7 @@ def insert_report(report) -> None:
     )
 
 
-def report_exists(report_number) -> bool:
+def report_exists(report_number: int) -> bool:
     with closing(sqlite3.connect("reports.db")) as connection:
         with closing(connection.cursor()) as cursor:
             match = cursor.execute(
