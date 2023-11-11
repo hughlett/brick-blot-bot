@@ -1,4 +1,6 @@
 from datetime import date, timedelta
+
+from pandas import DataFrame
 from db import insert_report, report_exists
 from scraper import scrape_days
 
@@ -8,19 +10,17 @@ def create_tweets_from_text_helper(text: str, tweets: list):
     if len(text) <= MAX_TWEET_LENGTH:
         return tweets.append(text)
 
-    tweets.append(text[: MAX_TWEET_LENGTH - 3] + "\u2026")
-    return create_tweets_from_text_helper(
-        "\u2026" + text[MAX_TWEET_LENGTH - 3 :], tweets
-    )
+    tweets.append(text[: MAX_TWEET_LENGTH - 1] + "⋯")
+    return create_tweets_from_text_helper("⋯" + text[MAX_TWEET_LENGTH - 1 :], tweets)
 
 
-def create_tweets_from_text(text: str):
+def create_tweets_from_text(text: str) -> list:
     tweets = []
     create_tweets_from_text_helper(text, tweets)
     return tweets
 
 
-def create_tweets_from_report(report):
+def create_tweets_from_report(report: DataFrame) -> list:
     date_and_time = report["Date / Time  Occurred *"].split("  ")
     date = date_and_time[0]
 
@@ -41,25 +41,25 @@ def create_tweets_from_report(report):
     return create_tweets_from_text(text)
 
 
-def tweet_reports(start_date, end_date, client):
-    df = scrape_days(start_date, end_date)
+def tweet_reports(start_date, end_date, client) -> None:
+    reports = scrape_days(start_date, end_date)
 
-    if df is None:
+    if reports is None:
         return
 
-    MAX_API_CALLS = 50
-    api_calls = 0
+    API_RATE_LIMIT = 50
+    api_calls_made = 0
 
-    for index, report in df.iterrows():
+    for index, report in reports.iterrows():
         if report_exists(report["Report Number"]):
             continue
 
         tweets = create_tweets_from_report(report)
 
-        if api_calls + len(tweets) >= MAX_API_CALLS:
+        if api_calls_made + len(tweets) >= API_RATE_LIMIT:
             return
 
-        api_calls += len(tweets)
+        api_calls_made += len(tweets)
         response = client.create_tweet(text=tweets[0])
 
         for reply in tweets[1:]:

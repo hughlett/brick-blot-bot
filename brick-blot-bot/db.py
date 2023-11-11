@@ -2,7 +2,7 @@ import sqlite3
 from contextlib import closing
 
 
-def create_table():
+def create_table() -> None:
     with closing(sqlite3.connect("reports.db")) as connection:
         with closing(connection.cursor()) as cursor:
             cursor.execute(
@@ -12,7 +12,7 @@ def create_table():
 
 def insert_row(
     report_number, time_reported, date_time_occurred, incident, location, narrative
-):
+) -> None:
     with closing(sqlite3.connect("reports.db")) as connection:
         with closing(connection.cursor()) as cursor:
             cursor.execute(
@@ -29,7 +29,7 @@ def insert_row(
         connection.commit()
 
 
-def insert_report(report):
+def insert_report(report) -> None:
     insert_row(
         report["Report Number"],
         report["Time Reported"],
@@ -40,7 +40,7 @@ def insert_report(report):
     )
 
 
-def report_exists(report_number):
+def report_exists(report_number) -> bool:
     with closing(sqlite3.connect("reports.db")) as connection:
         with closing(connection.cursor()) as cursor:
             match = cursor.execute(
