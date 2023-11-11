@@ -25,13 +25,12 @@ def scrape_day(date: date) -> DataFrame:
 
 def scrape_days(start_date: date, end_date: date) -> DataFrame | None:
     dataframes = list()
-    delta = timedelta(days=1)
 
     while start_date <= end_date:
         reports = scrape_day(start_date)
         if reports is not None:
             dataframes.append(reports)
-        start_date += delta
+        start_date += timedelta(1)
 
     if not dataframes:
         return None
