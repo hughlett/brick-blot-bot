@@ -5,6 +5,14 @@ import requests
 
 
 def scrape_day(date: date) -> DataFrame:
+    """_summary_
+
+    Args:
+        date (date): _description_
+
+    Returns:
+        DataFrame: _description_
+    """
     url = f"https://safety2.oit.ncsu.edu/newblotter.asp?NOTDTE={str(date.month).zfill(2)}%2F{str(date.day).zfill(2)}%2F{date.year % 100}&submit=Submit"
     html = requests.get(url).text
     df = read_html(StringIO(html))
@@ -24,6 +32,15 @@ def scrape_day(date: date) -> DataFrame:
 
 
 def scrape_days(start_date: date, end_date: date) -> DataFrame | None:
+    """_summary_
+
+    Args:
+        start_date (date): _description_
+        end_date (date): _description_
+
+    Returns:
+        DataFrame | None: _description_
+    """
     dataframes = list()
 
     while start_date <= end_date:

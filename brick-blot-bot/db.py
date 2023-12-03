@@ -5,6 +5,7 @@ from pandas import DataFrame
 
 
 def create_table() -> None:
+    """_summary_"""
     with closing(sqlite3.connect("reports.db")) as connection:
         with closing(connection.cursor()) as cursor:
             cursor.execute(
@@ -20,6 +21,16 @@ def insert_row(
     location: str,
     narrative: str,
 ) -> None:
+    """_summary_
+
+    Args:
+        report_number (int): _description_
+        time_reported (str): _description_
+        date_time_occurred (str): _description_
+        incident (str): _description_
+        location (str): _description_
+        narrative (str): _description_
+    """
     with closing(sqlite3.connect("reports.db")) as connection:
         with closing(connection.cursor()) as cursor:
             cursor.execute(
@@ -37,6 +48,11 @@ def insert_row(
 
 
 def insert_report(report: DataFrame) -> None:
+    """_summary_
+
+    Args:
+        report (DataFrame): _description_
+    """
     insert_row(
         report["Report Number"],
         report["Time Reported"],
@@ -48,6 +64,14 @@ def insert_report(report: DataFrame) -> None:
 
 
 def report_exists(report_number: int) -> bool:
+    """_summary_
+
+    Args:
+        report_number (int): _description_
+
+    Returns:
+        bool: _description_
+    """
     with closing(sqlite3.connect("reports.db")) as connection:
         with closing(connection.cursor()) as cursor:
             match = cursor.execute(

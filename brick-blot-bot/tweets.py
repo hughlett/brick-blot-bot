@@ -1,26 +1,54 @@
 from datetime import date
-from pandas import DataFrame
-from tweepy import Client
+from os import environ
+from pandas import Series
+import tweepy
 from db import insert_report, report_exists
 from scraper import scrape_days
 
 
 def create_tweets_from_text_helper(text: str, tweets: list):
-    MAX_TWEET_LENGTH = 280
+    """_summary_
+
+    Args:
+        text (str): _description_
+        tweets (list): _description_
+
+    Returns:
+        _type_: _description_
+    """
+    MAX_TWEET_LENGTH = 280  # https://developer.twitter.com/en/docs/counting-characters
+    ellipsis = "..."
+
     if len(text) <= MAX_TWEET_LENGTH:
         return tweets.append(text)
 
-    tweets.append(text[: MAX_TWEET_LENGTH - 1] + "⋯")
+    tweets.append(text[: MAX_TWEET_LENGTH - len(ellipsis)] + ellipsis)
     return create_tweets_from_text_helper("⋯" + text[MAX_TWEET_LENGTH - 1 :], tweets)
 
 
 def create_tweets_from_text(text: str) -> list:
+    """_summary_
+
+    Args:
+        text (str): _description_
+
+    Returns:
+        list: _description_
+    """
     tweets = []
     create_tweets_from_text_helper(text, tweets)
     return tweets
 
 
-def create_tweets_from_report(report: DataFrame) -> list:
+def create_tweets_from_report(report: Series) -> list:
+    """_summary_
+
+    Args:
+        report (DataFrame): _description_
+
+    Returns:
+        list: _description_
+    """
     date_and_time = report["Date / Time  Occurred *"].split("  ")
     date = date_and_time[0]
 
@@ -41,11 +69,25 @@ def create_tweets_from_report(report: DataFrame) -> list:
     return create_tweets_from_text(text)
 
 
-def tweet_reports(start_date: date, end_date: date, client: Client) -> None:
+def tweet_reports(start_date: date, end_date: date) -> None:
+    """Post police reports over a range of dates.
+
+    Args:
+        start_date (date):
+        end_date (date):
+    """
     reports = scrape_days(start_date, end_date)
 
     if reports is None:
         return
+
+    client = tweepy.Client(
+        consumer_key=environ.get("CONSUMER_KEY"),
+        consumer_secret=environ.get("CONSUMER_KEY_SECRET"),
+        access_token=environ.get("ACCESS_TOKEN"),
+        access_token_secret=environ.get("ACCESS_TOKEN_SECRET"),
+        wait_on_rate_limit=True,
+    )
 
     API_RATE_LIMIT = 50
     api_calls_made = 0
@@ -60,7 +102,7 @@ def tweet_reports(start_date: date, end_date: date, client: Client) -> None:
             return
 
         api_calls_made += len(tweets)
-        response = client.create_tweet(text=tweets[0])
+        response = client.create_tweet(text=tweets[0], media_ids=[])
 
         for reply in tweets[1:]:
             response = client.create_tweet(
