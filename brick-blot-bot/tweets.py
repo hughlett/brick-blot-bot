@@ -35,6 +35,7 @@ def create_tweets_from_text(text: str) -> list:
     Returns:
         list: _description_
     """
+    # TODO: Look into verifying the final tweet with https://github.com/twitter/twitter-text/tree/master/js
     tweets = []
     create_tweets_from_text_helper(text, tweets)
     return tweets
