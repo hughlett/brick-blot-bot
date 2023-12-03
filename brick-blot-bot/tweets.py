@@ -102,7 +102,7 @@ def tweet_reports(start_date: date, end_date: date) -> None:
             return
 
         api_calls_made += len(tweets)
-        response = client.create_tweet(text=tweets[0], media_ids=[])
+        response = client.create_tweet(text=tweets[0])
 
         for reply in tweets[1:]:
             response = client.create_tweet(
